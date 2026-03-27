@@ -71,4 +71,4 @@ jobs:
 
       - name: Show directories with arm in the name
         if: always()
-        run: ls / ; echo ; find /usr -iname '*arm*' -a -type d
+        run: ls / ; echo ; echo ; find /usr -iname '*arm*' -a -type d ; echo ; echo ; ls /usr/bin/*arm*
