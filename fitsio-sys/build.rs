@@ -141,6 +141,7 @@ fn main() {
             panic!("Unhandled error: {:?}", e);
         }
     };
+    panic!("bleh");
 }
 
 fn generate_aliases_mod_file<'p>(include_paths: impl Iterator<Item = &'p PathBuf>) {
