@@ -98,7 +98,7 @@ jobs:
         with:
           use-cross: true
           command: test
-          args: --target armv7-unknown-linux-gnueabihf --manifest-path fitsio/Cargo.toml
+          args: --target armv7-unknown-linux-gnueabihf --manifest-path fitsio/Cargo.toml --features fitsio-src,src-cmake
 
   windows-test:
     runs-on: windows-latest

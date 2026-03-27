@@ -241,8 +241,10 @@ int ffpky( fitsfile *fptr,     /* I - FITS file pointer        */
     }
     else if (datatype == TULONGLONG)
     {
+        fprintf(stderr, "ENTERING TULONGLONG\n");
         ffpkyuj(fptr, keyname, (ULONGLONG) *(ULONGLONG *) value,
                comm, status);
+        fprintf(stderr, "STATUS OUT OF TULONGLONG: %d\n", *status);
     }
     else if (datatype == TLONG)
     {
@@ -633,8 +635,11 @@ int ffpkyuj( fitsfile *fptr,     /* I - FITS file pointer        */
         return(*status);
 
     ffu2c(value, valstring, status);   /* convert to formatted string */
+    fprintf(stderr, "STATUS AFTER ffpkyuj->ffu2c: %d\n", *status);
     ffmkky(keyname, valstring, comm, card, status);  /* construct the keyword*/
+    fprintf(stderr, "STATUS AFTER ffpkyuj->ffmkky: %d", *status);
     ffprec(fptr, card, status);  /* write the keyword*/
+    fprintf(stderr, "STATUS AFTER ffpkyuj->ffprec: %d", *status);
 
     return(*status);
 }
