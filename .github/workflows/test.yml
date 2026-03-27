@@ -93,6 +93,18 @@ jobs:
         if: hashFiles('Cargo.lock') == ''
         run: cargo generate-lockfile
 
+      - name: Install cmake and ARM libraries
+        run: |
+          sudo dpkg --add-architecture armhf && \
+          sudo apt-get update && sudo apt-get install --no-install-recommends -y \
+            llvm-dev \
+            libstdc++6:armhf libgcc1:armhf zlib1g:armhf \
+            libcfitsio-dev \
+            pkg-config \
+            libssl-dev \
+            cmake \
+            python3
+
       - name: Test the code
         uses: actions-rs/cargo@v1
         with:
