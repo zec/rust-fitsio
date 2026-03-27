@@ -166,7 +166,7 @@ macro_rules! writes_key_impl {
                 let c_name = ffi::CString::new(name)?;
                 let mut status = 0;
 
-                eprintln!("{} has data type {}", stringify!($t), <$t as HasFitsDataType>::FITS_DATA_TYPE.into::<c_int>());
+                eprintln!("{} has data type {}", stringify!($t), i32::from(<$t as HasFitsDataType>::FITS_DATA_TYPE));
                 unsafe {
                     fits_write_key(
                         f.fptr.as_mut() as *mut _,
