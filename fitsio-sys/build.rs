@@ -103,6 +103,8 @@ fn main() {
 #[cfg(not(feature = "fitsio-src"))]
 fn main() {
     recurse_and_find("/usr", "cfitsio").expect("We should have recursed successfully");
+    let pc_file = std::fs::read("/usr/lib/arm-linux-gnueabihf/pkgconfig/cfitsio.pc").expect("didn't read in cfitsio.pc");
+    eprintln!("==== cfitsio.pc ====\n{}\n==== cfitsio.pc ====", std::str::from_utf8(&pc_file).expect("why???"));
     // `msys2` does not report the version of cfitsio correctly, so ignore the version specifier for now.
     let package_name = if cfg!(windows) {
         let msg = "No version specifier available for pkg-config on windows, so the version of cfitsio used when compiling this program is unspecified";
@@ -155,7 +157,7 @@ fn recurse_and_find<P: AsRef<Path>>(root_path: P, pattern: &str) -> Result<(), s
             }
         }
         if entry.file_type()?.is_dir() {
-            recurse_and_find(entry.path(), pattern);
+            recurse_and_find(entry.path(), pattern)?;
         }
     }
     Ok(())
