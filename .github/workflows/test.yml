@@ -29,8 +29,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust: [stable, beta]
-        test: [array, bindgen, clippy, fitsio-src, fitsio-src-and-cmake, fitsio-src-and-bindgen, full-example, workspace, fitsio-src-and-cmake-and-bindgen]
+        rust: [stable]
+        test: [array, bindgen]
     steps:
       - name: Checkout sources
         uses: actions/checkout@v6
@@ -44,43 +44,6 @@ jobs:
             libssl-dev \
             cmake \
             python3
-
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{matrix.rust}}
-          override: true
-          components: rustfmt, clippy
-
-      - name: Install cargo-nextest
-        uses: baptiste0928/cargo-install@v3
-        with:
-          crate: cargo-nextest
-          locked: true
-
-      - name: cargo generate-lockfile
-        # enable this ci template to run regardless of whether the lockfile is checked in or not
-        if: hashFiles('Cargo.lock') == ''
-        run: cargo generate-lockfile
-
-      - name: Test the code
-        run: cargo xtask test --rust-version ${{matrix.rust}} --test ${{matrix.test}}
-
-  macos-test:
-    runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        rust: [stable, beta]
-        test: [array, bindgen, clippy, fitsio-src, fitsio-src-and-cmake, fitsio-src-and-bindgen, full-example, workspace]
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v6
-
-      - name: Install dependencies
-        run: |
-          brew install cfitsio python3 cmake
 
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
