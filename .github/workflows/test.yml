@@ -68,7 +68,3 @@ jobs:
           use-cross: true
           command: test
           args: --target armv7-unknown-linux-gnueabihf --manifest-path fitsio/Cargo.toml
-
-      - name: Show directories with arm in the name
-        if: always()
-        run: ls / ; echo ; echo ; find /usr -iname '*arm*' -a -type d ; echo ; echo ; ls /usr/bin/*arm*

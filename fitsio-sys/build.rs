@@ -102,6 +102,7 @@ fn main() {
 
 #[cfg(not(feature = "fitsio-src"))]
 fn main() {
+    recurse_and_find("/usr", "cfitsio").expect("We should have recursed successfully");
     // `msys2` does not report the version of cfitsio correctly, so ignore the version specifier for now.
     let package_name = if cfg!(windows) {
         let msg = "No version specifier available for pkg-config on windows, so the version of cfitsio used when compiling this program is unspecified";
@@ -142,6 +143,22 @@ fn main() {
         }
     };
     panic!("bleh");
+}
+
+use std::path::Path;
+fn recurse_and_find<P: AsRef<Path>>(root_path: P, pattern: &str) -> Result<(), std::io::Error> {
+    for entry in std::fs::read_dir(root_path)? {
+        let entry = entry?;
+        if let Some(filename) = entry.file_name().to_str() {
+            if filename.contains(pattern) {
+                eprintln!("* {}", entry.path().display());
+            }
+        }
+        if entry.file_type()?.is_dir() {
+            recurse_and_find(entry.path(), pattern);
+        }
+    }
+    Ok(())
 }
 
 fn generate_aliases_mod_file<'p>(include_paths: impl Iterator<Item = &'p PathBuf>) {
