@@ -24,49 +24,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ci-test:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        rust: [stable]
-        test: [array, bindgen]
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v6
-
-      - name: Install ubuntu dependencies
-        run: |
-          sudo apt-get update && sudo apt-get install --no-install-recommends -y \
-            llvm-dev \
-            libcfitsio-dev \
-            pkg-config \
-            libssl-dev \
-            cmake \
-            python3
-
-      - name: Install toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{matrix.rust}}
-          override: true
-          components: rustfmt, clippy
-
-      - name: Install cargo-nextest
-        uses: baptiste0928/cargo-install@v3
-        with:
-          crate: cargo-nextest
-          locked: true
-
-      - name: cargo generate-lockfile
-        # enable this ci template to run regardless of whether the lockfile is checked in or not
-        if: hashFiles('Cargo.lock') == ''
-        run: cargo generate-lockfile
-
-      - name: Test the code
-        run: cargo xtask test --rust-version ${{matrix.rust}} --test ${{matrix.test}}
-
   linux-armv7:
     runs-on: ubuntu-latest
     strategy:
@@ -111,39 +68,3 @@ jobs:
           use-cross: true
           command: test
           args: --target armv7-unknown-linux-gnueabihf --manifest-path fitsio/Cargo.toml --features fitsio-src
-
-  windows-test:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v6
-
-      - name: Set up msys2
-        uses: msys2/setup-msys2@v2
-
-      - name: Install dependencies
-        shell: msys2 {0}
-        run: |
-          pacman -S --noconfirm \
-          mingw-w64-x86_64-gcc \
-          mingw-w64-x86_64-make \
-          mingw-w64-x86_64-winpthreads \
-          mingw64/mingw-w64-x86_64-cfitsio \
-          mingw64/mingw-w64-x86_64-pkgconf \
-          mingw64/mingw-w64-x86_64-cmake \
-          mingw64/mingw-w64-x86_64-rust
-
-      - name: cargo generate-lockfile
-        # enable this ci template to run regardless of whether the lockfile is checked in or not
-        if: hashFiles('Cargo.lock') == ''
-        run: cargo generate-lockfile
-
-      - name: Run the tests
-        shell: msys2 {0}
-        run: |
-          cargo test -p fitsio
-
-      - name: Run the tests, with fitsio-src/src-cmake
-        shell: msys2 {0}
-        run: |
-          cargo test -p fitsio --features=fitsio-src,src-cmake

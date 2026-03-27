@@ -637,9 +637,9 @@ int ffpkyuj( fitsfile *fptr,     /* I - FITS file pointer        */
     ffu2c(value, valstring, status);   /* convert to formatted string */
     fprintf(stderr, "STATUS AFTER ffpkyuj->ffu2c: %d\n", *status);
     ffmkky(keyname, valstring, comm, card, status);  /* construct the keyword*/
-    fprintf(stderr, "STATUS AFTER ffpkyuj->ffmkky: %d", *status);
+    fprintf(stderr, "STATUS AFTER ffpkyuj->ffmkky: %d\n", *status);
     ffprec(fptr, card, status);  /* write the keyword*/
-    fprintf(stderr, "STATUS AFTER ffpkyuj->ffprec: %d", *status);
+    fprintf(stderr, "STATUS AFTER ffpkyuj->ffprec: %d\n", *status);
 
     return(*status);
 }
