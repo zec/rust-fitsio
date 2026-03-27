@@ -93,8 +93,6 @@ jobs:
         if: hashFiles('Cargo.lock') == ''
         run: cargo generate-lockfile
 
-      - name: See what libraries are installed
-        run: ls -R /usr
 #      - name: Install cmake and ARM libraries
 #        run: |
 #          sudo dpkg --add-architecture armhf && \
@@ -112,7 +110,7 @@ jobs:
         with:
           use-cross: true
           command: test
-          args: --target armv7-unknown-linux-gnueabihf --manifest-path fitsio/Cargo.toml --features fitsio-src,src-cmake
+          args: --target armv7-unknown-linux-gnueabihf --manifest-path fitsio/Cargo.toml --features fitsio-src
 
   windows-test:
     runs-on: windows-latest
